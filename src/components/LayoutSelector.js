@@ -84,9 +84,9 @@ const LayoutSelector = ({ selectedLayout, onLayoutChange }) => {
       {layouts.map((layout) => (
         <Button
           key={`${layout.type}-${layout.variant}`}
-          variant={isSelected(layout) ? 'solid' : 'bordered'}
+          variant={isSelected(layout) ? 'solid' : 'flat'}
           color={isSelected(layout) ? 'primary' : 'default'}
-          className="h-auto p-3 flex flex-col items-center gap-2"
+          className={`h-auto p-3 flex flex-col items-center gap-2 ${isSelected(layout) ? 'hover:opacity-90' : 'hover:bg-gray-100'}`}
           onClick={() => onLayoutChange({ type: layout.type, variant: layout.variant })}
         >
           <div className="flex items-center justify-center">

@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import { Spinner } from '@heroui/react'; // Assuming Spinner is available in HeroUI
 
 const ImageFrame = ({
   frameId,
@@ -13,6 +14,15 @@ const ImageFrame = ({
   onFrameSelect
 }) => {
   const fileInputRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (image && image.src) {
+      setIsLoading(true);
+    } else {
+      setIsLoading(false);
+    }
+  }, [image]);
 
   const handleFileSelect = (e) => {
     const file = e.target.files[0];
@@ -30,6 +40,7 @@ const ImageFrame = ({
   };
 
   const handleImageLoad = (e) => {
+    setIsLoading(false);
     // Ensure image fits within frame initially
     const img = e.target;
     const frameAspect = width / height;
@@ -57,16 +68,22 @@ const ImageFrame = ({
     }
   };
 
+  const handleImageError = () => {
+    setIsLoading(false);
+  };
+
   return (
     <div
-      className={`absolute image-frame ${
-        image ? 'has-image' : ''
-      } ${isSelected ? 'selected' : ''}`}
+      className={`absolute image-frame ${image ? 'has-image' : ''} ${
+        isSelected
+          ? 'ring-4 ring-primary-500 ring-offset-2 ring-offset-gray-50'
+          : 'border border-gray-300'
+      }`}
       style={{
         left: x,
         top: y,
         width,
-        height
+        height,
       }}
       onClick={handleFrameClick}
       onMouseDown={image ? onMouseDown : undefined}
@@ -78,50 +95,53 @@ const ImageFrame = ({
         onChange={handleFileSelect}
         className="hidden"
       />
-      
+
       {image ? (
-        <div className="relative w-full h-full overflow-hidden">
+        <div className="relative w-full h-full overflow-hidden rounded-lg"> {/* Added rounded-lg here to ensure spinner container also respects it */}
+          {isLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 backdrop-blur-sm z-10 rounded-lg">
+              <Spinner color="primary" size="lg" />
+            </div>
+          )}
           <img
             src={image.src}
             alt="Collage frame"
-            className="absolute object-cover"
+            className={`absolute object-cover ${isLoading ? 'opacity-0' : 'opacity-100 transition-opacity duration-300'}`}
             style={{
-              transform: `translate(${image.x || 0}px, ${image.y || 0}px) scale(${image.scale || 1})`,
+              transform: `translate(${image.x || 0}px, ${
+                image.y || 0
+              }px) scale(${image.scale || 1})`,
               transformOrigin: 'top left',
               width: 'auto',
               height: 'auto',
               maxWidth: 'none',
-              maxHeight: 'none'
+              maxHeight: 'none',
             }}
             onLoad={handleImageLoad}
+            onError={handleImageError}
             draggable={false}
           />
         </div>
       ) : (
-        <div className="upload-placeholder">
+        <div className="flex flex-col items-center justify-center w-full h-full bg-gray-50 text-gray-500 rounded-lg cursor-pointer hover:bg-gray-100">
           <svg
-            className="w-12 h-12 mb-2 text-gray-400"
+            className="w-16 h-16 text-gray-400"
+            xmlns="http://www.w3.org/2000/svg"
             fill="none"
-            stroke="currentColor"
             viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
           >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
             />
           </svg>
-          <span className="text-sm font-medium">Click to upload</span>
-          <span className="text-xs text-gray-400 mt-1">PNG, JPG, WEBP</span>
-        </div>
-      )}
-      
-      {isSelected && image && (
-        <div className="absolute top-2 right-2">
-          <div className="bg-blue-500 text-white text-xs px-2 py-1 rounded">
-            Selected
-          </div>
+          <span className="text-base font-semibold mt-2">
+            Click or drag to upload
+          </span>
+          <span className="text-xs mt-1">PNG, JPG, WEBP</span>
         </div>
       )}
     </div>
