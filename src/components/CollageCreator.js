@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Card, CardBody, Button, Slider } from '@heroui/react';
+import { Card, CardBody, Button, Slider, Accordion, AccordionItem, Divider } from '@heroui/react';
 import Canvas from './Canvas';
 import LayoutSelector from './LayoutSelector';
 import AspectRatioSelector from './AspectRatioSelector';
@@ -87,37 +87,15 @@ const CollageCreator = () => {
       </div>
 
       {/* Control Panel */}
-      <div className="lg:col-span-1 space-y-4">
-        {/* Layout Selection */}
-        <Card>
-          <CardBody className="p-4">
-            <h3 className="text-lg font-semibold mb-4">Layout</h3>
-            <LayoutSelector
-              selectedLayout={layout}
-              onLayoutChange={setLayout}
-            />
-          </CardBody>
-        </Card>
-
-        {/* Aspect Ratio Selection */}
-        <Card>
-          <CardBody className="p-4">
-            <h3 className="text-lg font-semibold mb-4">Aspect Ratio</h3>
-            <AspectRatioSelector
-              selectedRatio={aspectRatio}
-              onRatioChange={setAspectRatio}
-            />
-          </CardBody>
-        </Card>
-
-        {/* Image Controls */}
+      <div className="lg:col-span-1">
+        {/* Image Controls - Appears conditionally ABOVE the accordion */}
         {selectedFrame && images[selectedFrame] && (
-          <Card>
+          <Card className="mb-4">
             <CardBody className="p-4">
-              <h3 className="text-lg font-semibold mb-4">Image Controls</h3>
+              <h3 className="text-lg font-semibold text-gray-800 mb-4">Image Controls</h3>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium mb-2 block">Scale</label>
+                  <label className="text-sm font-semibold text-gray-700 mb-2 block">Scale</label>
                   <Slider
                     size="sm"
                     step={0.1}
@@ -126,6 +104,7 @@ const CollageCreator = () => {
                     value={images[selectedFrame].scale}
                     onChange={(value) => handleImageTransform(selectedFrame, { scale: value })}
                     className="max-w-md"
+                    color="primary"
                   />
                 </div>
                 <Button
@@ -133,7 +112,7 @@ const CollageCreator = () => {
                   variant="flat"
                   size="sm"
                   onClick={() => removeImage(selectedFrame)}
-                  className="w-full"
+                  className="w-full hover:bg-danger-50"
                 >
                   Remove Image
                 </Button>
@@ -142,36 +121,46 @@ const CollageCreator = () => {
           </Card>
         )}
 
-        {/* Customization Panel */}
-        <Card>
-          <CardBody className="p-4">
-            <h3 className="text-lg font-semibold mb-4">Customization</h3>
-            <CustomizationPanel
-              backgroundColor={backgroundColor}
-              borderThickness={borderThickness}
-              borderColor={borderColor}
-              onBackgroundColorChange={setBackgroundColor}
-              onBorderThicknessChange={setBorderThickness}
-              onBorderColorChange={setBorderColor}
-            />
-          </CardBody>
-        </Card>
-
-        {/* Export Panel */}
-        <Card>
-          <CardBody className="p-4">
-            <h3 className="text-lg font-semibold mb-4">Export</h3>
-            <ExportPanel
-              canvasRef={canvasRef}
-              layout={layout}
-              aspectRatio={aspectRatio}
-              images={images}
-              backgroundColor={backgroundColor}
-              borderThickness={borderThickness}
-              borderColor={borderColor}
-            />
-          </CardBody>
-        </Card>
+        <Accordion selectionMode="single" defaultExpandedKeys={['setup']}>
+          <AccordionItem key="setup" title="Setup & Layout">
+            <div className="p-4">
+              <LayoutSelector
+                selectedLayout={layout}
+                onLayoutChange={setLayout}
+              />
+              <Divider className="my-4" />
+              <AspectRatioSelector
+                selectedRatio={aspectRatio}
+                onRatioChange={setAspectRatio}
+              />
+            </div>
+          </AccordionItem>
+          <AccordionItem key="customize" title="Customize">
+            <div className="p-4">
+              <CustomizationPanel
+                backgroundColor={backgroundColor}
+                borderThickness={borderThickness}
+                borderColor={borderColor}
+                onBackgroundColorChange={setBackgroundColor}
+                onBorderThicknessChange={setBorderThickness}
+                onBorderColorChange={setBorderColor}
+              />
+            </div>
+          </AccordionItem>
+          <AccordionItem key="export" title="Export">
+            <div className="p-4">
+              <ExportPanel
+                canvasRef={canvasRef}
+                layout={layout}
+                aspectRatio={aspectRatio}
+                images={images}
+                backgroundColor={backgroundColor}
+                borderThickness={borderThickness}
+                borderColor={borderColor}
+              />
+            </div>
+          </AccordionItem>
+        </Accordion>
       </div>
     </div>
   );

@@ -36,35 +36,37 @@ const CustomizationPanel = ({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Background Color */}
       <div>
-        <label className="text-sm font-medium mb-3 block">Background Color</label>
-        <div className="space-y-3">
+        <label className="text-sm font-semibold text-gray-700 mb-3 block">Background Color</label>
+        <div className="space-y-4">
           {/* Color Input */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
             <input
               type="color"
               value={backgroundColor}
               onChange={(e) => handleColorInputChange(e, 'background')}
-              className="w-8 h-8 rounded border border-gray-300 cursor-pointer"
+              className="w-10 h-10 rounded-md border-gray-300 cursor-pointer"
             />
             <input
               type="text"
               value={backgroundColor}
               onChange={(e) => onBackgroundColorChange(e.target.value)}
-              className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded"
+              className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
               placeholder="#ffffff"
             />
           </div>
-          
+
           {/* Preset Colors */}
-          <div className="grid grid-cols-7 gap-1">
+          <div className="grid grid-cols-7 gap-2">
             {presetColors.map((color) => (
               <button
-                key={color}
-                className={`w-6 h-6 rounded border-2 ${
-                  backgroundColor === color ? 'border-blue-500' : 'border-gray-300'
+                key={`bg-${color}`}
+                className={`w-8 h-8 rounded-full border hover:opacity-80 ${
+                  backgroundColor === color
+                    ? 'ring-2 ring-offset-1 ring-primary-500 border-primary-500'
+                    : 'border-gray-300 hover:ring-1 hover:ring-gray-400'
                 }`}
                 style={{ backgroundColor: color }}
                 onClick={() => onBackgroundColorChange(color)}
@@ -77,8 +79,8 @@ const CustomizationPanel = ({
 
       {/* Border Thickness */}
       <div>
-        <label className="text-sm font-medium mb-3 block">
-          Border Thickness: {borderThickness}px
+        <label className="text-sm font-semibold text-gray-700 mb-3 block">
+          Border Thickness: <span className="font-normal">{borderThickness}px</span>
         </label>
         <Slider
           size="sm"
@@ -88,38 +90,41 @@ const CustomizationPanel = ({
           value={borderThickness}
           onChange={onBorderThicknessChange}
           className="max-w-md"
+          color="primary"
         />
       </div>
 
       {/* Border Color */}
       {borderThickness > 0 && (
         <div>
-          <label className="text-sm font-medium mb-3 block">Border Color</label>
-          <div className="space-y-3">
+          <label className="text-sm font-semibold text-gray-700 mb-3 block">Border Color</label>
+          <div className="space-y-4">
             {/* Color Input */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <input
                 type="color"
                 value={borderColor}
                 onChange={(e) => handleColorInputChange(e, 'border')}
-                className="w-8 h-8 rounded border border-gray-300 cursor-pointer"
+                className="w-10 h-10 rounded-md border-gray-300 cursor-pointer"
               />
               <input
                 type="text"
                 value={borderColor}
                 onChange={(e) => onBorderColorChange(e.target.value)}
-                className="flex-1 px-2 py-1 text-sm border border-gray-300 rounded"
-                placeholder="#ffffff"
+                className="flex-1 px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-1 focus:ring-primary-500 focus:border-primary-500"
+                placeholder="#000000"
               />
             </div>
-            
+
             {/* Preset Colors */}
-            <div className="grid grid-cols-7 gap-1">
+            <div className="grid grid-cols-7 gap-2">
               {presetColors.map((color) => (
                 <button
-                  key={color}
-                  className={`w-6 h-6 rounded border-2 ${
-                    borderColor === color ? 'border-blue-500' : 'border-gray-300'
+                  key={`border-${color}`}
+                  className={`w-8 h-8 rounded-full border hover:opacity-80 ${
+                    borderColor === color
+                      ? 'ring-2 ring-offset-1 ring-primary-500 border-primary-500'
+                      : 'border-gray-300 hover:ring-1 hover:ring-gray-400'
                   }`}
                   style={{ backgroundColor: color }}
                   onClick={() => onBorderColorChange(color)}
@@ -133,11 +138,12 @@ const CustomizationPanel = ({
 
       {/* Quick Presets */}
       <div>
-        <label className="text-sm font-medium mb-3 block">Quick Presets</label>
+        <label className="text-sm font-semibold text-gray-700 mb-3 block">Quick Presets</label>
         <div className="grid grid-cols-2 gap-2">
           <Button
             size="sm"
-            variant="bordered"
+            variant="flat"
+            className="hover:bg-gray-100"
             onClick={() => {
               onBackgroundColorChange('#ffffff');
               onBorderThicknessChange(10);
@@ -148,7 +154,8 @@ const CustomizationPanel = ({
           </Button>
           <Button
             size="sm"
-            variant="bordered"
+            variant="flat"
+            className="hover:bg-gray-100"
             onClick={() => {
               onBackgroundColorChange('#000000');
               onBorderThicknessChange(5);
@@ -159,7 +166,8 @@ const CustomizationPanel = ({
           </Button>
           <Button
             size="sm"
-            variant="bordered"
+            variant="flat"
+            className="hover:bg-gray-100"
             onClick={() => {
               onBackgroundColorChange('#f8f9fa');
               onBorderThicknessChange(0);
@@ -170,7 +178,8 @@ const CustomizationPanel = ({
           </Button>
           <Button
             size="sm"
-            variant="bordered"
+            variant="flat"
+            className="hover:bg-gray-100"
             onClick={() => {
               onBackgroundColorChange('#ffffff');
               onBorderThicknessChange(20);

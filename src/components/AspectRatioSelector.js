@@ -70,18 +70,18 @@ const AspectRatioSelector = ({ selectedRatio, onRatioChange }) => {
       {aspectRatios.map((ratio) => (
         <Button
           key={ratio.value}
-          variant={selectedRatio === ratio.value ? 'solid' : 'bordered'}
+          variant={selectedRatio === ratio.value ? 'solid' : 'flat'}
           color={selectedRatio === ratio.value ? 'primary' : 'default'}
-          className="h-auto p-3 flex flex-col items-center gap-2"
+          className={`h-auto p-3 flex flex-col items-center gap-2 ${selectedRatio === ratio.value ? 'hover:opacity-90' : 'hover:bg-gray-100'}`}
           onClick={() => onRatioChange(ratio.value)}
         >
           <div className="flex items-center justify-center">
             {ratio.icon}
           </div>
           <div className="text-center">
-            <div className="text-sm font-medium">{ratio.name}</div>
-            <div className="text-xs text-gray-500">{ratio.value}</div>
-            <div className="text-xs text-gray-400">{ratio.description}</div>
+            <div className={`text-sm font-medium ${selectedRatio === ratio.value ? 'text-primary-700' : 'text-gray-900'}`}>{ratio.name}</div>
+            <div className={`text-xs ${selectedRatio === ratio.value ? 'text-primary-600' : 'text-gray-500'}`}>{ratio.value}</div>
+            <div className={`text-xs ${selectedRatio === ratio.value ? 'text-primary-500' : 'text-gray-400'}`}>{ratio.description}</div>
           </div>
         </Button>
       ))}
